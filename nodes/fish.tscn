@@ -1,0 +1,165 @@
+[gd_scene load_steps=12 format=3 uid="uid://clbu0vayepc4t"]
+
+[ext_resource type="Texture2D" uid="uid://djkb7neg5a8j8" path="res://assets/fish/morgana.png" id="1_2ed4b"]
+[ext_resource type="Script" path="res://scripts/fish.gd" id="1_5qocl"]
+
+[sub_resource type="Animation" id="Animation_6tvmj"]
+resource_name = "die"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+
+[sub_resource type="Animation" id="Animation_hqkdc"]
+resource_name = "eat"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+
+[sub_resource type="Animation" id="Animation_3h8ri"]
+resource_name = "hungry-eat"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+
+[sub_resource type="Animation" id="Animation_guhr8"]
+resource_name = "hungry-swim"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+
+[sub_resource type="Animation" id="Animation_arah7"]
+resource_name = "hungry-turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+
+[sub_resource type="Animation" id="Animation_6rq3e"]
+resource_name = "swim"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+
+[sub_resource type="Animation" id="Animation_gbwqu"]
+resource_name = "turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lfh4c"]
+_data = {
+"die": SubResource("Animation_6tvmj"),
+"eat": SubResource("Animation_hqkdc"),
+"hungry-eat": SubResource("Animation_3h8ri"),
+"hungry-swim": SubResource("Animation_guhr8"),
+"hungry-turn": SubResource("Animation_arah7"),
+"swim": SubResource("Animation_6rq3e"),
+"turn": SubResource("Animation_gbwqu")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pn3c6"]
+size = Vector2(48, 48)
+
+[node name="Fish" type="CharacterBody2D" groups=["Fish"]]
+collision_layer = 2
+collision_mask = 17
+motion_mode = 1
+platform_on_leave = 2
+script = ExtResource("1_5qocl")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_2ed4b")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "swim"
+libraries = {
+"": SubResource("AnimationLibrary_lfh4c")
+}
+
+[node name="NavigationHelper" type="ReferenceRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 24.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FoodDetector" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FoodDetector"]
+shape = SubResource("RectangleShape2D_pn3c6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_pn3c6")
+
+[connection signal="area_entered" from="FoodDetector" to="." method="_on_food_detector_area_entered"]
